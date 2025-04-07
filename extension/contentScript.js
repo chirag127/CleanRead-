@@ -5,6 +5,9 @@ let summary = null;
 let currentView = "raw";
 let textSize = 100;
 let sidebar = null;
+let ttsVoice = "default";
+let ttsSpeed = 1.0;
+let isSpeaking = false;
 
 // Initialize when the page is loaded
 window.addEventListener("DOMContentLoaded", () => {
@@ -16,12 +19,18 @@ window.addEventListener("DOMContentLoaded", () => {
         {
             autoClean: false,
             theme: "light",
+            ttsVoice: "default",
+            ttsSpeed: 1.0,
         },
         (items) => {
             // Apply theme
             if (items.theme === "dark") {
                 applyDarkTheme();
             }
+
+            // Set TTS settings
+            ttsVoice = items.ttsVoice;
+            ttsSpeed = items.ttsSpeed;
 
             // Auto-clean if enabled
             if (items.autoClean) {
@@ -56,6 +65,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             break;
         case "getReadTime":
             sendResponse({ readTime: calculateReadTime() });
+            break;
+        case "setTtsVoice":
+            setTtsVoice(request.voice);
+            sendResponse({ success: true });
+            break;
+        case "setTtsSpeed":
+            setTtsSpeed(request.speed);
+            sendResponse({ success: true });
+            break;
+        case "playTts":
+            playTts(request.text);
+            sendResponse({ success: true });
+            break;
+        case "stopTts":
+            stopTts();
+            sendResponse({ success: true });
             break;
     }
     return true;
@@ -348,6 +373,38 @@ function createOrUpdateSidebar(readTime) {
   `;
     readTimeDiv.textContent = `Estimated Read Time: ${readTime}`;
     sidebar.appendChild(readTimeDiv);
+
+    // Create TTS button
+    const ttsButtonContainer = document.createElement("div");
+    ttsButtonContainer.style.cssText = `
+    padding: 8px 16px;
+    border-bottom: 1px solid #e1e4e8;
+    display: flex;
+    justify-content: center;
+  `;
+
+    const ttsButton = document.createElement("button");
+    ttsButton.className = "tts-button";
+    ttsButton.textContent = "Read Aloud";
+    ttsButton.style.cssText = `
+    padding: 8px 16px;
+    background-color: #4a6fa5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  `;
+    ttsButton.addEventListener("click", () => {
+        if (isSpeaking) {
+            stopTts();
+        } else {
+            playTts();
+        }
+    });
+
+    ttsButtonContainer.appendChild(ttsButton);
+    sidebar.appendChild(ttsButtonContainer);
 
     // Create content area
     const contentArea = document.createElement("div");
@@ -723,5 +780,87 @@ function removeDarkTheme() {
     if (contentArea) {
         contentArea.style.backgroundColor = "#fff";
         contentArea.style.color = "#333";
+    }
+}
+
+// Set TTS voice
+function setTtsVoice(voice) {
+    ttsVoice = voice;
+}
+
+// Set TTS speed
+function setTtsSpeed(speed) {
+    ttsSpeed = speed;
+}
+
+// Play text-to-speech
+function playTts(text) {
+    // Stop any ongoing speech
+    stopTts();
+
+    // If no text is provided, use the current summary or cleaned content
+    if (!text) {
+        if (currentView === "summary" && summary) {
+            // Create a temporary div to extract text from HTML
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = summary;
+            text = tempDiv.textContent;
+        } else if (cleanedContent) {
+            // Create a temporary div to extract text from HTML
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = cleanedContent;
+            text = tempDiv.textContent;
+        } else {
+            return; // No content to speak
+        }
+    }
+
+    // Set speaking flag
+    isSpeaking = true;
+
+    // Configure TTS options
+    const options = {
+        rate: ttsSpeed,
+        voiceName: ttsVoice !== "default" ? ttsVoice : undefined,
+        onEvent: function (event) {
+            if (
+                event.type === "end" ||
+                event.type === "interrupted" ||
+                event.type === "cancelled" ||
+                event.type === "error"
+            ) {
+                isSpeaking = false;
+                updateTtsButton();
+            }
+        },
+    };
+
+    // Speak the text
+    chrome.tts.speak(text, options);
+
+    // Update TTS button
+    updateTtsButton();
+}
+
+// Stop text-to-speech
+function stopTts() {
+    if (isSpeaking) {
+        chrome.tts.stop();
+        isSpeaking = false;
+        updateTtsButton();
+    }
+}
+
+// Update TTS button appearance based on speaking state
+function updateTtsButton() {
+    const ttsButton = document.querySelector(".tts-button");
+    if (ttsButton) {
+        if (isSpeaking) {
+            ttsButton.textContent = "Stop TTS";
+            ttsButton.classList.add("tts-active");
+        } else {
+            ttsButton.textContent = "Read Aloud";
+            ttsButton.classList.remove("tts-active");
+        }
     }
 }

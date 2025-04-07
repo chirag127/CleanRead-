@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CleanRead</title>
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
   <div class="container">
     <header>
@@ -15,12 +17,12 @@
         <label for="theme-switch" class="theme-label"></label>
       </div>
     </header>
-    
+
     <div class="actions">
       <button id="clean-btn" class="btn primary">Clean Page</button>
       <button id="summarize-btn" class="btn secondary">Summarize</button>
     </div>
-    
+
     <div class="view-toggle">
       <div class="toggle-label">View Mode:</div>
       <div class="toggle-options">
@@ -29,11 +31,11 @@
         <button id="summary-view" class="view-btn">Summary</button>
       </div>
     </div>
-    
+
     <div class="read-time">
       <span id="read-time-value">Estimated Read Time: --</span>
     </div>
-    
+
     <div class="summary-mode">
       <div class="toggle-label">Summary Mode:</div>
       <div class="toggle-options">
@@ -42,7 +44,7 @@
         <button id="key-mode" class="mode-btn">Key Points</button>
       </div>
     </div>
-    
+
     <div class="settings">
       <h3>Settings</h3>
       <div class="setting-item">
@@ -54,9 +56,24 @@
         <label for="auto-clean">Auto-Clean on New Pages:</label>
         <input type="checkbox" id="auto-clean">
       </div>
+
+      <h3>Text-to-Speech</h3>
+      <div class="setting-item">
+        <label for="tts-voice">Voice:</label>
+        <select id="tts-voice" class="tts-select">
+          <option value="default">Default</option>
+          <!-- Voice options will be populated by JavaScript -->
+        </select>
+      </div>
+      <div class="setting-item">
+        <label for="tts-speed">Speed:</label>
+        <input type="range" id="tts-speed" min="0.5" max="2" step="0.1" value="1">
+        <span id="tts-speed-value">1.0x</span>
+      </div>
     </div>
   </div>
-  
+
   <script src="popup.js"></script>
 </body>
+
 </html>

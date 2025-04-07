@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const viewButtons = document.querySelectorAll(".view-btn");
     const modeButtons = document.querySelectorAll(".mode-btn");
     const readTimeValue = document.getElementById("read-time-value");
+    const ttsVoiceSelect = document.getElementById("tts-voice");
+    const ttsSpeedSlider = document.getElementById("tts-speed");
+    const ttsSpeedValue = document.getElementById("tts-speed-value");
 
     // Load saved settings
     chrome.storage.sync.get(
@@ -18,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
             autoClean: false,
             viewMode: "raw",
             summaryMode: "tldr",
+            ttsVoice: "default",
+            ttsSpeed: 1.0,
         },
         (items) => {
             // Apply theme
@@ -49,6 +54,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     btn.classList.remove("active");
                 }
+            });
+
+            // Populate voice options and apply TTS settings
+            populateVoiceOptions().then(() => {
+                // Set selected voice
+                if (
+                    items.ttsVoice &&
+                    ttsVoiceSelect.querySelector(
+                        `option[value="${items.ttsVoice}"]`
+                    )
+                ) {
+                    ttsVoiceSelect.value = items.ttsVoice;
+                }
+
+                // Set speech rate
+                ttsSpeedSlider.value = items.ttsSpeed;
+                ttsSpeedValue.textContent = `${items.ttsSpeed.toFixed(1)}x`;
             });
         }
     );
@@ -164,4 +186,48 @@ document.addEventListener("DOMContentLoaded", () => {
             chrome.storage.sync.set({ summaryMode: mode });
         });
     });
+
+    // TTS voice select handler
+    ttsVoiceSelect.addEventListener("change", () => {
+        chrome.storage.sync.set({ ttsVoice: ttsVoiceSelect.value });
+    });
+
+    // TTS speed slider handler
+    ttsSpeedSlider.addEventListener("input", () => {
+        const speed = parseFloat(ttsSpeedSlider.value);
+        ttsSpeedValue.textContent = `${speed.toFixed(1)}x`;
+        chrome.storage.sync.set({ ttsSpeed: speed });
+
+        // Update speech rate on the active tab
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                action: "setTtsSpeed",
+                speed: speed,
+            });
+        });
+    });
+
+    // Function to populate voice options
+    async function populateVoiceOptions() {
+        return new Promise((resolve) => {
+            chrome.tts.getVoices((voices) => {
+                // Clear existing options except default
+                while (ttsVoiceSelect.options.length > 1) {
+                    ttsVoiceSelect.remove(1);
+                }
+
+                // Add available voices
+                voices.forEach((voice) => {
+                    const option = document.createElement("option");
+                    option.value = voice.voiceName;
+                    option.textContent = `${voice.voiceName} (${
+                        voice.lang || "unknown"
+                    })`;
+                    ttsVoiceSelect.appendChild(option);
+                });
+
+                resolve();
+            });
+        });
+    }
 });

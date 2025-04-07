@@ -1,0 +1,149 @@
+/* CleanRead Content Styles */
+
+/* Reader Mode Styles */
+.cleanread-active {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.cleanread-active h1,
+.cleanread-active h2,
+.cleanread-active h3,
+.cleanread-active h4,
+.cleanread-active h5,
+.cleanread-active h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+  color: #222;
+}
+
+.cleanread-active p {
+  margin-bottom: 1em;
+}
+
+.cleanread-active a {
+  color: #4a6fa5;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(74, 111, 165, 0.2);
+}
+
+.cleanread-active a:hover {
+  border-bottom-color: rgba(74, 111, 165, 0.6);
+}
+
+.cleanread-active img {
+  max-width: 100%;
+  height: auto;
+  margin: 1em 0;
+}
+
+.cleanread-active blockquote {
+  border-left: 4px solid #4a6fa5;
+  padding-left: 1em;
+  margin-left: 0;
+  color: #555;
+}
+
+.cleanread-active code {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #f5f7fa;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.cleanread-active pre {
+  background-color: #f5f7fa;
+  padding: 1em;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.cleanread-active ul,
+.cleanread-active ol {
+  margin-bottom: 1em;
+  padding-left: 2em;
+}
+
+.cleanread-active li {
+  margin-bottom: 0.5em;
+}
+
+.cleanread-active hr {
+  border: none;
+  border-top: 1px solid #e1e4e8;
+  margin: 2em 0;
+}
+
+.cleanread-active table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.cleanread-active th,
+.cleanread-active td {
+  border: 1px solid #e1e4e8;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.cleanread-active th {
+  background-color: #f5f7fa;
+}
+
+/* Dark Theme */
+.cleanread-dark {
+  color: #e1e1e1;
+  background-color: #1e1e1e;
+}
+
+.cleanread-dark h1,
+.cleanread-dark h2,
+.cleanread-dark h3,
+.cleanread-dark h4,
+.cleanread-dark h5,
+.cleanread-dark h6 {
+  color: #fff;
+}
+
+.cleanread-dark a {
+  color: #6d9eeb;
+  border-bottom-color: rgba(109, 158, 235, 0.2);
+}
+
+.cleanread-dark a:hover {
+  border-bottom-color: rgba(109, 158, 235, 0.6);
+}
+
+.cleanread-dark blockquote {
+  border-left-color: #6d9eeb;
+  color: #aaa;
+}
+
+.cleanread-dark code {
+  background-color: #2d2d2d;
+}
+
+.cleanread-dark pre {
+  background-color: #2d2d2d;
+}
+
+.cleanread-dark hr {
+  border-top-color: #444;
+}
+
+.cleanread-dark table,
+.cleanread-dark th,
+.cleanread-dark td {
+  border-color: #444;
+}
+
+.cleanread-dark th {
+  background-color: #2d2d2d;
+}

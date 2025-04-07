@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CleanRead</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CleanRead</h1>
+      <div class="theme-toggle">
+        <input type="checkbox" id="theme-switch" class="theme-switch">
+        <label for="theme-switch" class="theme-label"></label>
+      </div>
+    </header>
+    
+    <div class="actions">
+      <button id="clean-btn" class="btn primary">Clean Page</button>
+      <button id="summarize-btn" class="btn secondary">Summarize</button>
+    </div>
+    
+    <div class="view-toggle">
+      <div class="toggle-label">View Mode:</div>
+      <div class="toggle-options">
+        <button id="raw-view" class="view-btn active">Original</button>
+        <button id="clean-view" class="view-btn">Clean</button>
+        <button id="summary-view" class="view-btn">Summary</button>
+      </div>
+    </div>
+    
+    <div class="read-time">
+      <span id="read-time-value">Estimated Read Time: --</span>
+    </div>
+    
+    <div class="summary-mode">
+      <div class="toggle-label">Summary Mode:</div>
+      <div class="toggle-options">
+        <button id="tldr-mode" class="mode-btn active">TL;DR</button>
+        <button id="bullets-mode" class="mode-btn">Bullets</button>
+        <button id="key-mode" class="mode-btn">Key Points</button>
+      </div>
+    </div>
+    
+    <div class="settings">
+      <h3>Settings</h3>
+      <div class="setting-item">
+        <label for="text-size">Text Size:</label>
+        <input type="range" id="text-size" min="80" max="150" value="100">
+        <span id="text-size-value">100%</span>
+      </div>
+      <div class="setting-item">
+        <label for="auto-clean">Auto-Clean on New Pages:</label>
+        <input type="checkbox" id="auto-clean">
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

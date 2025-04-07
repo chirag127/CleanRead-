@@ -1,5 +1,6 @@
 // Backend API URL
-const API_URL = 'http://localhost:3000/api';
+// const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://cleanread.onrender.com/api';
 
 // Listen for messages from content script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -12,7 +13,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         console.error('Error generating summary:', error);
         sendResponse({ error: 'Failed to generate summary' });
       });
-    
+
     return true; // Indicates async response
   }
 });
@@ -27,11 +28,11 @@ async function summarize(content, mode) {
       },
       body: JSON.stringify({ content, mode })
     });
-    
+
     if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data.summary;
   } catch (error) {
